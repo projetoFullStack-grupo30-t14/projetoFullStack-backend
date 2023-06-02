@@ -5,7 +5,7 @@ export class Car {
   brand: string;
   model: string;
   year: Date;
-  fuel: 'gas' | 'hybrid' | 'electric';
+  fuel: 'flex' | 'hybrid' | 'electric';
   mileage: number;
   color: string;
   price_FIPE: number;
@@ -19,5 +19,6 @@ export class Car {
     this.id = randomUUID();
     this.is_active = true;
     this.created_at = new Date();
+    this.year = new Date(`${this.year}-02-01`);
   }
 }

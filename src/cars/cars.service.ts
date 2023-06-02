@@ -15,7 +15,7 @@ export class CarsService {
     model: string | undefined,
     color: string | undefined,
     year: Date | undefined,
-    fuel: 'electric' | 'gas' | 'hybrid' | undefined,
+    fuel: 'electric' | 'flex' | 'hybrid' | undefined,
     mileage: number | undefined,
     price: number | undefined,
   ) {

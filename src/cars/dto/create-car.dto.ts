@@ -1,12 +1,7 @@
 import { Transform } from 'class-transformer';
-import {
-  IsBoolean,
-  IsDate,
-  IsIn,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-} from 'class-validator';
+import { IsIn, IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
+
+const current = new Date().getFullYear();
 
 export class CreateCarDto {
   @IsString()
@@ -17,13 +12,18 @@ export class CreateCarDto {
   @IsNotEmpty()
   model: string;
 
-  @IsDate()
+  @IsInt()
   @IsNotEmpty()
+  @Max(current)
+  @Min(1886)
+  @Transform(({ value }: { value: string }) => new Date(`${value}-02-01`), {
+    groups: ['transform'],
+  })
   year: Date;
 
-  @IsIn(['electric', 'gas', 'hybrid'])
+  @IsIn(['electric', 'flex', 'hybrid'])
   @IsNotEmpty()
-  fuel: 'electric' | 'gas' | 'hybrid';
+  fuel: 'electric' | 'flex' | 'hybrid';
 
   @IsInt()
   @IsNotEmpty()
@@ -32,10 +32,6 @@ export class CreateCarDto {
   @IsString()
   @IsNotEmpty()
   color: string;
-
-  @IsInt()
-  @IsNotEmpty()
-  price_FIPE: number;
 
   @IsInt()
   @IsNotEmpty()
@@ -48,16 +44,4 @@ export class CreateCarDto {
   @IsString()
   @IsNotEmpty()
   cover_image: string;
-
-  @IsBoolean()
-  @Transform(({ value }: { value: boolean }) => true, {
-    groups: ['transform'],
-  })
-  is_active: boolean;
-
-  @IsDate()
-  @Transform(({ value }: { value: string }) => Date.now(), {
-    groups: ['transform'],
-  })
-  created_at: Date;
 }

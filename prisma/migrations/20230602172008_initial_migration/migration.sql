@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "FuelType" AS ENUM ('electric', 'gas', 'hybrid');
+CREATE TYPE "FuelType" AS ENUM ('flex', 'hybrid', 'electric');
 
 -- CreateTable
 CREATE TABLE "Cars" (
@@ -10,7 +10,7 @@ CREATE TABLE "Cars" (
     "fuel" "FuelType" NOT NULL,
     "mileage" INTEGER NOT NULL,
     "color" VARCHAR(20) NOT NULL,
-    "price_FIPE" DOUBLE PRECISION NOT NULL,
+    "price_FIPE" DOUBLE PRECISION,
     "price" DOUBLE PRECISION NOT NULL,
     "description" TEXT NOT NULL,
     "cover_image" VARCHAR(120) NOT NULL,

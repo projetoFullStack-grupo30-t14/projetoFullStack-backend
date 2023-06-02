@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,9 +8,9 @@ datasource db {
 }
 
 enum FuelType {
-  electric
-  gas
+  flex
   hybrid
+  electric
 }
 
 model Cars {
@@ -22,7 +21,7 @@ model Cars {
   fuel FuelType
   mileage Int
   color String @db.VarChar(20)
-  price_FIPE Float 
+  price_FIPE Float? 
   price Float 
   description String @db.Text
   cover_image String @db.VarChar(120)
