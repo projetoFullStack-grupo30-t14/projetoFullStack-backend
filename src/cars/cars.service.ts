@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
+import { CarPrismaRepository } from './repositories/prisma/car.prisma.repository';
 
 @Injectable()
 export class CarsService {
+  constructor(private carRepository: CarPrismaRepository) {}
   create(createCarDto: CreateCarDto) {
-    return 'This action adds a new car';
+    return this.carRepository.create(createCarDto);
   }
 
-  findAll() {
-    return `This action returns all cars`;
+  findAll(
+    brand: string | undefined,
+    model: string | undefined,
+    color: string | undefined,
+    year: Date | undefined,
+    fuel: 'electric' | 'gas' | 'hybrid' | undefined,
+    mileage: number | undefined,
+    price: number | undefined,
+  ) {
+    return this.carRepository.findAll(
+      brand,
+      model,
+      color,
+      year,
+      fuel,
+      mileage,
+      price,
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} car`;
+  findOne(id: string) {
+    return this.carRepository.findOne(id);
   }
 
-  update(id: number, updateCarDto: UpdateCarDto) {
-    return `This action updates a #${id} car`;
+  update(id: string, updateCarDto: UpdateCarDto) {
+    return this.carRepository.update(id, updateCarDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} car`;
+  remove(id: string) {
+    return this.carRepository.delete(id);
   }
 }
