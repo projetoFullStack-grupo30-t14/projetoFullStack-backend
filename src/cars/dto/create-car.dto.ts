@@ -23,7 +23,7 @@ export class CreateCarDto {
 
   @IsIn(['electric', 'gas', 'hybrid'])
   @IsNotEmpty()
-  fuel: string;
+  fuel: 'electric' | 'gas' | 'hybrid';
 
   @IsInt()
   @IsNotEmpty()

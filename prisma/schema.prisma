@@ -22,8 +22,8 @@ model Cars {
   fuel FuelType
   mileage Int
   color String @db.VarChar(20)
-  price_FIPE Decimal @db.Money
-  price Decimal @db.Money
+  price_FIPE Float 
+  price Float 
   description String @db.Text
   cover_image String @db.VarChar(120)
   is_active Boolean @default(true)
