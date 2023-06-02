@@ -17,7 +17,7 @@ model Cars {
   id String @id @default(uuid())
   brand String @db.VarChar(50)
   model String @db.VarChar(50)
-  year DateTime
+  year Int
   fuel FuelType
   mileage Int
   color String @db.VarChar(20)
@@ -27,4 +27,13 @@ model Cars {
   cover_image String @db.VarChar(120)
   is_active Boolean @default(true)
   created_at DateTime @default(now())
+  car_gallery CarGallery[]
+}
+
+model CarGallery {
+  id String @id
+  car_id String
+  car Cars @relation(fields: [car_id], references: [id])
+
+  @@map("car_images")
 }

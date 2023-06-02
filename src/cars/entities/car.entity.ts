@@ -4,7 +4,7 @@ export class Car {
   readonly id: string;
   brand: string;
   model: string;
-  year: Date;
+  year: number;
   fuel: 'flex' | 'hybrid' | 'electric';
   mileage: number;
   color: string;
@@ -19,6 +19,5 @@ export class Car {
     this.id = randomUUID();
     this.is_active = true;
     this.created_at = new Date();
-    this.year = new Date(`${this.year}-02-01`);
   }
 }

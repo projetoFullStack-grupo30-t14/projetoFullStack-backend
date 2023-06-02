@@ -31,7 +31,7 @@ export class CarPrismaRepository implements CarRepository {
     const { brand, model, year } = data;
 
     let findValue = 0;
-    const url = `https://kenzie-kars.herokuapp.com/cars/unique?brand=${brand}&name=${model}&year=${year.getFullYear()}&fuel=${fuelToApi}`;
+    const url = `https://kenzie-kars.herokuapp.com/cars/unique?brand=${brand}&name=${model}&year=${year}&fuel=${fuelToApi}`;
     await fetch(url)
       .then((response) => response.json())
       .then((res) => {
@@ -50,7 +50,7 @@ export class CarPrismaRepository implements CarRepository {
     brand: string | undefined,
     model: string | undefined,
     color: string | undefined,
-    year: Date | undefined,
+    year: number | undefined,
     fuel: 'electric' | 'flex' | 'hybrid' | undefined,
     mileage: number | undefined,
     price: number | undefined,
@@ -60,7 +60,7 @@ export class CarPrismaRepository implements CarRepository {
         brand: { contains: brand, mode: 'insensitive' },
         model: { contains: model, mode: 'insensitive' },
         color: { contains: color, mode: 'insensitive' },
-        year: { lte: new Date(`${year}-02-01`) },
+        year: { lte: year },
         fuel: fuel,
         mileage: { lte: mileage ? +mileage : mileage },
         price: { lte: price ? +price : price },

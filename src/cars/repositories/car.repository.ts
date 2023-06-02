@@ -8,7 +8,7 @@ export abstract class CarRepository {
     brand: string | undefined,
     model: string | undefined,
     color: string | undefined,
-    year: Date | undefined,
+    year: number | undefined,
     fuel: 'electric' | 'flex' | 'hybrid' | undefined,
     mileage: number | undefined,
     price: number | undefined,

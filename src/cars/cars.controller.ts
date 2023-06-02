@@ -29,7 +29,7 @@ export class CarsController {
     @Query('brand') brand: string | undefined,
     @Query('model') model: string | undefined,
     @Query('color') color: string | undefined,
-    @Query('year') year: Date | undefined,
+    @Query('year') year: number | undefined,
     @Query('fuel') fuel: 'electric' | 'flex' | 'hybrid' | undefined,
     @Query('mileage') mileage: number | undefined,
     @Query('price') price: number | undefined,

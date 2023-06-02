@@ -1,6 +1,4 @@
-import { Transform } from 'class-transformer';
 import { IsIn, IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
-
 const current = new Date().getFullYear();
 
 export class CreateCarDto {
@@ -13,13 +11,12 @@ export class CreateCarDto {
   model: string;
 
   @IsInt()
-  @IsNotEmpty()
-  @Max(current)
-  @Min(1886)
-  @Transform(({ value }: { value: string }) => new Date(`${value}-02-01`), {
-    groups: ['transform'],
+  @Max(current, {
+    message: `Must not be greater than current year: ${current}`,
   })
-  year: Date;
+  @Min(1886, { message: 'No cars existed before 1886' })
+  @IsNotEmpty()
+  year: number;
 
   @IsIn(['electric', 'flex', 'hybrid'])
   @IsNotEmpty()
