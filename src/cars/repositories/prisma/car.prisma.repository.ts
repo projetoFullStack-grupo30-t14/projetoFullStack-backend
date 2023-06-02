@@ -60,10 +60,13 @@ export class CarPrismaRepository implements CarRepository {
         brand: { contains: brand, mode: 'insensitive' },
         model: { contains: model, mode: 'insensitive' },
         color: { contains: color, mode: 'insensitive' },
-        year: { lte: year },
+        year: { lte: year ? +year : year },
         fuel: fuel,
         mileage: { lte: mileage ? +mileage : mileage },
         price: { lte: price ? +price : price },
+      },
+      include: {
+        car_gallery: true,
       },
     });
 
