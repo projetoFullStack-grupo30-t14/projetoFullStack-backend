@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CarRepository } from '../car.repository';
 import { CreateCarDto } from 'src/cars/dto/create-car.dto';
 import { Car } from 'src/cars/entities/car.entity';
@@ -25,10 +25,17 @@ export class CarPrismaRepository implements CarRepository {
         break;
     }
 
+    const { car_gallery, ...rest } = data;
+
     const car: Cars = new Car();
-    Object.assign(car, { ...data });
+    Object.assign(car, { ...rest });
 
     const { brand, model, year } = data;
+    const galleryId: {
+      image: string;
+    }[] = car_gallery.map((image) => {
+      return { image: image };
+    });
 
     let findValue = 0;
     const url = `https://kenzie-kars.herokuapp.com/cars/unique?brand=${brand}&name=${model}&year=${year}&fuel=${fuelToApi}`;
@@ -40,7 +47,18 @@ export class CarPrismaRepository implements CarRepository {
       .catch((err) => console.log(err));
 
     const createdCar: Cars = await this.prisma.cars.create({
-      data: { ...car, price_FIPE: findValue },
+      data: {
+        ...car,
+        price_FIPE: findValue,
+        car_gallery: { createMany: { data: galleryId } },
+      },
+      include: {
+        car_gallery: {
+          select: {
+            image: true,
+          },
+        },
+      },
     });
 
     return plainToInstance(Car, createdCar);
@@ -66,7 +84,11 @@ export class CarPrismaRepository implements CarRepository {
         price: { lte: price ? +price : price },
       },
       include: {
-        car_gallery: true,
+        car_gallery: {
+          select: {
+            image: true,
+          },
+        },
       },
     });
 
@@ -76,28 +98,33 @@ export class CarPrismaRepository implements CarRepository {
   async findOne(id: string): Promise<Car> {
     const findCar: Cars | null = await this.prisma.cars.findUnique({
       where: { id },
+      include: {
+        car_gallery: {
+          select: {
+            image: true,
+          },
+        },
+      },
     });
-
-    if (!findCar) {
-      throw new HttpException('Car not found', 404);
-    }
 
     return plainToInstance(Car, findCar);
   }
 
   async update(id: string, data: UpdateCarDto): Promise<Car> {
-    const findCar: Cars | null = await this.prisma.cars.findUnique({
-      where: { id },
-    });
-
-    if (!findCar) {
-      throw new HttpException('Car not found', 404);
-    }
+    const { car_gallery, ...rest } = data;
 
     const updatedCar: Cars = await this.prisma.cars.update({
       where: { id },
       data: {
-        ...data,
+        ...rest,
+      },
+      include: {
+        car_gallery: {
+          select: {
+            image: true,
+            id: true,
+          },
+        },
       },
     });
 
@@ -105,14 +132,6 @@ export class CarPrismaRepository implements CarRepository {
   }
 
   async delete(id: string): Promise<void> {
-    const findCar: Cars | null = await this.prisma.cars.findUnique({
-      where: { id },
-    });
-
-    if (!findCar) {
-      throw new HttpException('Car not found', 404);
-    }
-
     await this.prisma.cars.delete({ where: { id } });
   }
 }

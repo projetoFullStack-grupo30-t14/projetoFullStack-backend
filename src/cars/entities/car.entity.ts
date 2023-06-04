@@ -14,10 +14,21 @@ export class Car {
   cover_image: string;
   is_active: boolean;
   readonly created_at: Date;
+  car_gallery: Car_image[];
 
   constructor() {
     this.id = randomUUID();
     this.is_active = true;
     this.created_at = new Date();
+  }
+}
+
+export class Car_image {
+  id: string;
+  car_id: string;
+  image: string;
+
+  constructor() {
+    this.id = randomUUID();
   }
 }

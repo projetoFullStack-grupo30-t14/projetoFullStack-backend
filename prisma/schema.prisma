@@ -31,7 +31,8 @@ model Cars {
 }
 
 model CarGallery {
-  id String @id
+  id String @id @default(uuid())
+  image String @db.VarChar(160)
   car_id String
   car Cars @relation(fields: [car_id], references: [id])
 

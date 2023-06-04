@@ -41,4 +41,7 @@ export class CreateCarDto {
   @IsString()
   @IsNotEmpty()
   cover_image: string;
+
+  @IsString({ each: true })
+  car_gallery: string[];
 }
