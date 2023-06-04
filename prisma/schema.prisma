@@ -34,7 +34,7 @@ model CarGallery {
   id String @id @default(uuid())
   image String @db.VarChar(160)
   car_id String
-  car Cars @relation(fields: [car_id], references: [id])
+  car Cars @relation(fields: [car_id], references: [id], onDelete: Cascade)
 
   @@map("car_images")
 }
