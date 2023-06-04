@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
-import { UpdateCarDto } from './dto/update-car.dto';
+import { UpdateCarDto, UpdateGalleryDto } from './dto/update-car.dto';
 import { CarPrismaRepository } from './repositories/prisma/car.prisma.repository';
 
 @Injectable()
@@ -36,6 +36,10 @@ export class CarsService {
 
   update(id: string, updateCarDto: UpdateCarDto) {
     return this.carRepository.update(id, updateCarDto);
+  }
+
+  updateGallery(id: string, UpdateGalleryDto: UpdateGalleryDto) {
+    return this.carRepository.updateGallery(id, UpdateGalleryDto);
   }
 
   remove(id: string) {

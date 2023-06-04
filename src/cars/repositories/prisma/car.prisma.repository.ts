@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CarRepository } from '../car.repository';
 import { CreateCarDto } from 'src/cars/dto/create-car.dto';
-import { Car } from 'src/cars/entities/car.entity';
+import { Car, Car_image } from 'src/cars/entities/car.entity';
 import { PrismaService } from 'src/database/prisma.service';
 import { plainToInstance } from 'class-transformer';
-import { UpdateCarDto } from 'src/cars/dto/update-car.dto';
+import { UpdateCarDto, UpdateGalleryDto } from 'src/cars/dto/update-car.dto';
 import { Cars } from '@prisma/client';
 
 @Injectable()
@@ -56,6 +56,7 @@ export class CarPrismaRepository implements CarRepository {
         car_gallery: {
           select: {
             image: true,
+            id: true,
           },
         },
       },
@@ -87,6 +88,7 @@ export class CarPrismaRepository implements CarRepository {
         car_gallery: {
           select: {
             image: true,
+            id: true,
           },
         },
       },
@@ -102,6 +104,7 @@ export class CarPrismaRepository implements CarRepository {
         car_gallery: {
           select: {
             image: true,
+            id: true,
           },
         },
       },
@@ -129,6 +132,15 @@ export class CarPrismaRepository implements CarRepository {
     });
 
     return plainToInstance(Car, updatedCar);
+  }
+
+  async updateGallery(id: string, data: UpdateGalleryDto): Promise<Car_image> {
+    const updatedGallery: Car_image = await this.prisma.carGallery.update({
+      where: { id },
+      data: { ...data },
+    });
+
+    return plainToInstance(Car_image, updatedGallery);
   }
 
   async delete(id: string): Promise<void> {

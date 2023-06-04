@@ -1,6 +1,6 @@
 import { CreateCarDto } from '../dto/create-car.dto';
-import { UpdateCarDto } from '../dto/update-car.dto';
-import { Car } from '../entities/car.entity';
+import { UpdateCarDto, UpdateGalleryDto } from '../dto/update-car.dto';
+import { Car, Car_image } from '../entities/car.entity';
 
 export abstract class CarRepository {
   abstract create(data: CreateCarDto): Promise<Car> | Car;
@@ -15,5 +15,9 @@ export abstract class CarRepository {
   ): Promise<Car[]> | Car[];
   abstract findOne(id: string): Promise<Car> | Car;
   abstract update(id: string, data: UpdateCarDto): Promise<Car> | Car;
+  abstract updateGallery(
+    id: string,
+    data: UpdateGalleryDto,
+  ): Promise<Car_image> | Car_image;
   abstract delete(id: string): Promise<void> | void;
 }
