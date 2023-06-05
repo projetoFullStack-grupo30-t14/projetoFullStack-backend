@@ -18,6 +18,8 @@ export class CarsService {
     fuel: 'electric' | 'flex' | 'hybrid' | undefined,
     mileage: number | undefined,
     price: number | undefined,
+    mileageBy: 'asc' | 'desc',
+    priceBy: 'asc' | 'desc',
   ) {
     return this.carRepository.findAll(
       brand,
@@ -27,6 +29,8 @@ export class CarsService {
       fuel,
       mileage,
       price,
+      mileageBy,
+      priceBy,
     );
   }
 

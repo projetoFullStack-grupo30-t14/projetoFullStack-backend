@@ -73,6 +73,8 @@ export class CarPrismaRepository implements CarRepository {
     fuel: 'electric' | 'flex' | 'hybrid' | undefined,
     mileage: number | undefined,
     price: number | undefined,
+    mileageBy: 'asc' | 'desc',
+    priceBy: 'asc' | 'desc',
   ): Promise<Car[]> {
     const carList: Cars[] = await this.prisma.cars.findMany({
       where: {
@@ -91,6 +93,10 @@ export class CarPrismaRepository implements CarRepository {
             id: true,
           },
         },
+      },
+      orderBy: {
+        mileage: mileageBy,
+        price: priceBy,
       },
     });
 
