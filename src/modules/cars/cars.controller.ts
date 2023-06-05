@@ -56,6 +56,12 @@ export class CarsController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @Get('/access/values')
+  findValues() {
+    return this.carsService.findValues();
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
     return this.carsService.update(id, updateCarDto);

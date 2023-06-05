@@ -49,4 +49,8 @@ export class CarsService {
   remove(id: string) {
     return this.carRepository.delete(id);
   }
+
+  findValues() {
+    return this.carRepository.distinctValues();
+  }
 }

@@ -22,4 +22,10 @@ export abstract class CarRepository {
     data: UpdateGalleryDto,
   ): Promise<Car_image> | Car_image;
   abstract delete(id: string): Promise<void> | void;
+  abstract distinctValues(): Promise<{
+    year: number[];
+    color: string[];
+    brand: string[];
+    model: string[];
+  }>;
 }
