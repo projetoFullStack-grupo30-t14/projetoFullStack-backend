@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum FuelType {
+  flex
+  hybrid
+  electric
+}
+
+model Cars {
+  id String @id @default(uuid())
+  brand String @db.VarChar(50)
+  model String @db.VarChar(50)
+  year Int
+  fuel FuelType
+  mileage Int
+  color String @db.VarChar(20)
+  price_FIPE Float? 
+  price Float 
+  description String @db.Text
+  cover_image String @db.VarChar(120)
+  is_active Boolean @default(true)
+  created_at DateTime @default(now())
+  car_gallery CarGallery[]
+}
+
+model CarGallery {
+  id String @id @default(uuid())
+  image String @db.VarChar(160)
+  car_id String
+  car Cars @relation(fields: [car_id], references: [id], onDelete: Cascade)
+
+  @@map("car_images")
+}
