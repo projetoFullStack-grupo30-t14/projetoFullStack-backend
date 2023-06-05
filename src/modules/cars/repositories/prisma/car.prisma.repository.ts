@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CarRepository } from '../car.repository';
-import { CreateCarDto } from 'src/cars/dto/create-car.dto';
-import { Car, Car_image } from 'src/cars/entities/car.entity';
 import { PrismaService } from 'src/database/prisma.service';
 import { plainToInstance } from 'class-transformer';
-import { UpdateCarDto, UpdateGalleryDto } from 'src/cars/dto/update-car.dto';
 import { Cars } from '@prisma/client';
+import { CreateCarDto } from '../../dto/create-car.dto';
+import { UpdateCarDto, UpdateGalleryDto } from '../../dto/update-car.dto';
+import { Car, Car_image } from '../../entities/car.entity';
 
 @Injectable()
 export class CarPrismaRepository implements CarRepository {
@@ -151,5 +151,42 @@ export class CarPrismaRepository implements CarRepository {
 
   async delete(id: string): Promise<void> {
     await this.prisma.cars.delete({ where: { id } });
+  }
+
+  async distinctValues(): Promise<{
+    year: number[];
+    color: string[];
+    brand: string[];
+    model: string[];
+  }> {
+    const values = {
+      year: [0],
+      color: [''],
+      brand: [''],
+      model: [''],
+    };
+
+    const year = await this.prisma.cars.groupBy({
+      by: ['year'],
+    });
+
+    const color = await this.prisma.cars.groupBy({
+      by: ['color'],
+    });
+
+    const brand = await this.prisma.cars.groupBy({
+      by: ['brand'],
+    });
+
+    const model = await this.prisma.cars.groupBy({
+      by: ['model'],
+    });
+
+    values.year = year.map((year) => year.year);
+    values.color = color.map((color) => color.color);
+    values.brand = brand.map((brand) => brand.brand);
+    values.model = model.map((model) => model.model);
+
+    return values;
   }
 }

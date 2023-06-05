@@ -26,8 +26,8 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
           statusCode: status,
           message:
             message.slice(
-              message.indexOf(`src\\`) + 4,
-              message.indexOf(`\\repositories`),
+              message.indexOf(`modules\\`) + 8,
+              message.indexOf(`s\\repositories`),
             ) + ' not found',
         });
         break;
