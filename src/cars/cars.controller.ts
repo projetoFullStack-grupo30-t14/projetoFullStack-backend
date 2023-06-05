@@ -33,6 +33,8 @@ export class CarsController {
     @Query('fuel') fuel: 'electric' | 'flex' | 'hybrid' | undefined,
     @Query('mileage') mileage: number | undefined,
     @Query('price') price: number | undefined,
+    @Query('mileageBy') mileageBy: 'asc' | 'desc',
+    @Query('priceBy') priceBy: 'asc' | 'desc',
   ) {
     return this.carsService.findAll(
       brand,
@@ -42,6 +44,8 @@ export class CarsController {
       fuel,
       mileage,
       price,
+      mileageBy,
+      priceBy,
     );
   }
 
