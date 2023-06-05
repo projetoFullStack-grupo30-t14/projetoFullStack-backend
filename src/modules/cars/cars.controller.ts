@@ -56,7 +56,7 @@ export class CarsController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get('/get/values')
+  @Get('/access/values')
   findValues() {
     return this.carsService.findValues();
   }
