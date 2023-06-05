@@ -1,13 +1,16 @@
+import { Transform } from 'class-transformer';
 import { IsIn, IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
 const current = new Date().getFullYear();
 
 export class CreateCarDto {
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }: { value: string }) => value.toLowerCase())
   brand: string;
 
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }: { value: string }) => value.toLowerCase())
   model: string;
 
   @IsInt()
@@ -28,6 +31,7 @@ export class CreateCarDto {
 
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }: { value: string }) => value.toLowerCase())
   color: string;
 
   @IsInt()
