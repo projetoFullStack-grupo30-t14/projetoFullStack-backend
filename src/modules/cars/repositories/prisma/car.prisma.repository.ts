@@ -71,8 +71,10 @@ export class CarPrismaRepository implements CarRepository {
     color: string | undefined,
     year: number | undefined,
     fuel: 'electric' | 'flex' | 'hybrid' | undefined,
-    mileage: number | undefined,
-    price: number | undefined,
+    mileageMin: number | undefined,
+    mileageMax: number | undefined,
+    priceMin: number | undefined,
+    priceMax: number | undefined,
     mileageBy: 'asc' | 'desc',
     priceBy: 'asc' | 'desc',
   ): Promise<Car[]> {
@@ -83,8 +85,14 @@ export class CarPrismaRepository implements CarRepository {
         color: { contains: color, mode: 'insensitive' },
         year: { lte: year ? +year : year },
         fuel: fuel,
-        mileage: { lte: mileage ? +mileage : mileage },
-        price: { lte: price ? +price : price },
+        mileage: {
+          lte: mileageMax ? +mileageMax : mileageMax,
+          gte: mileageMin ? +mileageMin : mileageMin,
+        },
+        price: {
+          lte: priceMax ? +priceMax : priceMax,
+          gte: priceMin ? +priceMin : priceMin,
+        },
       },
       include: {
         car_gallery: {
