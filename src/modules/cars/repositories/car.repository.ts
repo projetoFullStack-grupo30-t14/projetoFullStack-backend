@@ -10,8 +10,10 @@ export abstract class CarRepository {
     color: string | undefined,
     year: number | undefined,
     fuel: 'electric' | 'flex' | 'hybrid' | undefined,
-    mileage: number | undefined,
-    price: number | undefined,
+    mileageMin: number | undefined,
+    mileageMax: number | undefined,
+    priceMin: number | undefined,
+    priceMax: number | undefined,
     mileageBy: 'asc' | 'desc',
     priceBy: 'asc' | 'desc',
   ): Promise<Car[]> | Car[];
