@@ -37,6 +37,8 @@ export class CarsController {
     @Query('priceMax') priceMax: number | undefined,
     @Query('mileageBy') mileageBy: 'asc' | 'desc',
     @Query('priceBy') priceBy: 'asc' | 'desc',
+    @Query('page') page: number | undefined,
+    @Query('perPage') perPage: number | undefined,
   ) {
     return this.carsService.findAll(
       brand,
@@ -50,6 +52,8 @@ export class CarsController {
       priceMax,
       mileageBy,
       priceBy,
+      page,
+      perPage,
     );
   }
 

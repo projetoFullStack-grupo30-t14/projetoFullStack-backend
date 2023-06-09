@@ -16,6 +16,8 @@ export abstract class CarRepository {
     priceMax: number | undefined,
     mileageBy: 'asc' | 'desc',
     priceBy: 'asc' | 'desc',
+    page: number | undefined,
+    perPage: number | undefined,
   ): Promise<Car[]> | Car[];
   abstract findOne(id: string): Promise<Car> | Car;
   abstract update(id: string, data: UpdateCarDto): Promise<Car> | Car;
