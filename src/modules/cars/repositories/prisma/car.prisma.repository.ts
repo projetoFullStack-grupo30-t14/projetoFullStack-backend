@@ -77,7 +77,25 @@ export class CarPrismaRepository implements CarRepository {
     priceMax: number | undefined,
     mileageBy: 'asc' | 'desc',
     priceBy: 'asc' | 'desc',
+    page: number | undefined = 1,
+    perPage: number | undefined = 12,
   ): Promise<Car[]> {
+    if (perPage === 0) {
+      perPage = 1;
+    }
+
+    if (isNaN(Number(perPage))) {
+      perPage = 12;
+    }
+
+    if (isNaN(Number(page))) {
+      page = 1;
+    }
+
+    if (page <= 0) {
+      page = 1;
+    }
+
     const carList: Cars[] = await this.prisma.cars.findMany({
       where: {
         brand: { contains: brand, mode: 'insensitive' },
@@ -106,7 +124,11 @@ export class CarPrismaRepository implements CarRepository {
         mileage: mileageBy,
         price: priceBy,
       },
+      take: +perPage,
+      skip: (+page - 1) * +perPage,
     });
+
+    // console.log(carList.length);
 
     return plainToInstance(Car, carList);
   }

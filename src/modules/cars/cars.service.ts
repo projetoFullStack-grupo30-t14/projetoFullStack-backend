@@ -22,6 +22,8 @@ export class CarsService {
     priceMax: number | undefined,
     mileageBy: 'asc' | 'desc',
     priceBy: 'asc' | 'desc',
+    page: number | undefined,
+    perPage: number | undefined,
   ) {
     return this.carRepository.findAll(
       brand,
@@ -35,6 +37,8 @@ export class CarsService {
       priceMax,
       mileageBy,
       priceBy,
+      page,
+      perPage,
     );
   }
 
