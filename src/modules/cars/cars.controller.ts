@@ -9,18 +9,32 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Query,
+  UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from './dto/update-car.dto';
+import { CurrentUser } from '../users/user.decorator';
+import { User } from '../users/entities/user.entity';
+import { JWTAuthGuard } from '../auth/jwt.auth.guard';
+
+export interface IRequestUser {
+  id: string;
+  email: string;
+}
 
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  create(@Body() createCarDto: CreateCarDto) {
-    return this.carsService.create(createCarDto);
+  @UseGuards(JWTAuthGuard)
+  create(
+    @Body() createCarDto: CreateCarDto,
+    @CurrentUser() user: IRequestUser,
+  ) {
+    return this.carsService.create(createCarDto, user);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -71,12 +85,18 @@ export class CarsController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
-    return this.carsService.update(id, updateCarDto);
+  @UseGuards(JWTAuthGuard)
+  update(
+    @Param('id') id: string,
+    @Body() updateCarDto: UpdateCarDto,
+    @CurrentUser() user: IRequestUser,
+  ) {
+    return this.carsService.update(id, updateCarDto, user);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch('/gallery/:id')
+  @UseGuards(JWTAuthGuard)
   updateGallery(
     @Param('id') id: string,
     @Body() updateGalleryDto: UpdateGalleryDto,
@@ -85,7 +105,9 @@ export class CarsController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @HttpCode(204)
   @Delete(':id')
+  @UseGuards(JWTAuthGuard)
   remove(@Param('id') id: string) {
     return this.carsService.remove(id);
   }

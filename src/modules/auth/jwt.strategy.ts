@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { User } from '../users/entities/user.entity';
 
 interface iPayload {
   sub: string;
   email: string;
-  user: User;
 }
 
 @Injectable()

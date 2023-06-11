@@ -28,8 +28,8 @@ model Cars {
   is_active   Boolean      @default(true)
   created_at  DateTime     @default(now())
   car_gallery CarGallery[]
-  user        Users?       @relation(fields: [usersId], references: [id])
-  usersId     String?      @db.Uuid
+  user        Users       @relation(fields: [usersId], references: [id])
+  usersId     String      @db.Uuid
 }
 
 model CarGallery {
