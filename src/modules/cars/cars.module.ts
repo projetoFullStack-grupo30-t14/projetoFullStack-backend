@@ -4,8 +4,10 @@ import { CarsController } from './cars.controller';
 import { PrismaService } from 'src/database/prisma.service';
 import { CarPrismaRepository } from './repositories/prisma/car.prisma.repository';
 import { CarRepository } from './repositories/car.repository';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
+  imports: [PassportModule],
   controllers: [CarsController],
   providers: [
     CarsService,

@@ -22,11 +22,12 @@ export class UsersService {
     return user;
   }
 
-  findByEmail(email: string) {
-    const user = this.usersRepository.findByEmail(email);
+  async findByEmail(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
     if (!user) {
       throw new NotFoundException('User not found');
     }
+    return user;
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {

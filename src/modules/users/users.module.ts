@@ -4,8 +4,10 @@ import { UsersController } from './users.controller';
 import { PrismaService } from 'src/database/prisma.service';
 import { UserRepository } from './repositories/user.repository';
 import { UserPrismaRepository } from './repositories/prisma/user.prisma.repository';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
+  imports: [PassportModule],
   controllers: [UsersController],
   providers: [
     UsersService,
