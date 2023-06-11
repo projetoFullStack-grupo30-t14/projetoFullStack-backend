@@ -14,27 +14,46 @@ enum FuelType {
 }
 
 model Cars {
-  id String @id @default(uuid())
-  brand String @db.VarChar(50)
-  model String @db.VarChar(50)
-  year Int
-  fuel FuelType
-  mileage Int
-  color String @db.VarChar(20)
-  price_FIPE Float? 
-  price Float 
-  description String @db.Text
-  cover_image String @db.VarChar(120)
-  is_active Boolean @default(true)
-  created_at DateTime @default(now())
+  id          String       @id @default(uuid())
+  brand       String       @db.VarChar(50)
+  model       String       @db.VarChar(50)
+  year        Int
+  fuel        FuelType
+  mileage     Int
+  color       String       @db.VarChar(20)
+  price_FIPE  Float?
+  price       Float
+  description String       @db.Text
+  cover_image String       @db.VarChar(120)
+  is_active   Boolean      @default(true)
+  created_at  DateTime     @default(now())
   car_gallery CarGallery[]
+  user        Users?       @relation(fields: [usersId], references: [id])
+  usersId     String?      @db.Uuid
 }
 
 model CarGallery {
-  id String @id @default(uuid())
-  image String @db.VarChar(160)
+  id     String @id @default(uuid())
+  image  String @db.VarChar(160)
   car_id String
-  car Cars @relation(fields: [car_id], references: [id], onDelete: Cascade)
+  car    Cars   @relation(fields: [car_id], references: [id], onDelete: Cascade)
 
   @@map("car_images")
+}
+
+model Users {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  email         String   @unique
+  cpf           String
+  phone         String
+  date_of_birth String
+  description   String
+  address       String
+  seller        Boolean
+  created_at    DateTime @default(now())
+  password      String
+  cars          Cars[]
+
+  @@map("users")
 }

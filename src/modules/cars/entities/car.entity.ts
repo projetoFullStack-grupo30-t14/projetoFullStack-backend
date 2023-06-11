@@ -15,6 +15,7 @@ export class Car {
   is_active: boolean;
   readonly created_at: Date;
   car_gallery: Car_image[];
+  usersId: string;
 
   constructor() {
     this.id = randomUUID();
