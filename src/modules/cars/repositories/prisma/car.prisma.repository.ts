@@ -6,11 +6,12 @@ import { Cars } from '@prisma/client';
 import { CreateCarDto } from '../../dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from '../../dto/update-car.dto';
 import { Car, Car_image } from '../../entities/car.entity';
+import { IRequestUser } from '../../cars.controller';
 
 @Injectable()
 export class CarPrismaRepository implements CarRepository {
   constructor(private prisma: PrismaService) {}
-  async create(data: CreateCarDto): Promise<Car> {
+  async create(data: CreateCarDto, user: IRequestUser): Promise<Car> {
     let fuelToApi: number;
 
     switch (data.fuel) {
@@ -49,6 +50,7 @@ export class CarPrismaRepository implements CarRepository {
     const createdCar: Cars = await this.prisma.cars.create({
       data: {
         ...car,
+        usersId: user.id,
         price_FIPE: findValue,
         car_gallery: { createMany: { data: galleryId } },
       },
@@ -149,7 +151,11 @@ export class CarPrismaRepository implements CarRepository {
     return plainToInstance(Car, findCar);
   }
 
-  async update(id: string, data: UpdateCarDto): Promise<Car> {
+  async update(
+    id: string,
+    data: UpdateCarDto,
+    user: IRequestUser,
+  ): Promise<Car> {
     const { car_gallery, ...rest } = data;
 
     const updatedCar: Cars = await this.prisma.cars.update({

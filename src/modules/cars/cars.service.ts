@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from './dto/update-car.dto';
 import { CarPrismaRepository } from './repositories/prisma/car.prisma.repository';
+import { IRequestUser } from './cars.controller';
 
 @Injectable()
 export class CarsService {
   constructor(private carRepository: CarPrismaRepository) {}
-  create(createCarDto: CreateCarDto) {
-    return this.carRepository.create(createCarDto);
+  create(createCarDto: CreateCarDto, user: IRequestUser) {
+    return this.carRepository.create(createCarDto, user);
   }
 
   findAll(
@@ -43,11 +44,19 @@ export class CarsService {
   }
 
   findOne(id: string) {
-    return this.carRepository.findOne(id);
+    const car = this.carRepository.findOne(id);
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+    return car;
   }
 
-  update(id: string, updateCarDto: UpdateCarDto) {
-    return this.carRepository.update(id, updateCarDto);
+  update(id: string, updateCarDto: UpdateCarDto, user: IRequestUser) {
+    const car = this.carRepository.update(id, updateCarDto, user);
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+    return car;
   }
 
   updateGallery(id: string, UpdateGalleryDto: UpdateGalleryDto) {
@@ -55,7 +64,11 @@ export class CarsService {
   }
 
   remove(id: string) {
-    return this.carRepository.delete(id);
+    const car = this.carRepository.delete(id);
+    if (!car) {
+      throw new NotFoundException('Car not found');
+    }
+    return car;
   }
 
   findValues() {
