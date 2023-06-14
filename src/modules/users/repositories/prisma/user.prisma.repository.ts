@@ -12,7 +12,7 @@ export class UserPrismaRepository implements UserRepository {
   async create(data: CreateUserDto): Promise<User> {
     const foundUser = await this.findByEmail(data.email);
     if (foundUser) {
-      throw new BadRequestException('Email already in use');
+      throw new BadRequestException('Email já cadastrado');
     }
     const user = new User();
     Object.assign(user, {
