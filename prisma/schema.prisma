@@ -57,3 +57,15 @@ model Users {
 
   @@map("users")
 }
+
+model Addresses {
+  id            String   @id @default(uuid()) @db.Uuid
+  cep           Int
+  state         String 
+  city          String 
+  street        String 
+  number        Int
+  complement    String 
+
+  @@map("addresses")
+}
