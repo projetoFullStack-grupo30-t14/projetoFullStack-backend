@@ -9,7 +9,6 @@ export class User {
   phone: string;
   date_of_birth: string;
   description: string;
-  address: string;
   seller: boolean;
   readonly created_at: Date;
 

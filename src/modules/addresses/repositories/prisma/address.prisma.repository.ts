@@ -9,13 +9,22 @@ import { AddressRepository } from '../addresses.repository';
 @Injectable()
 export class AddressPrismaRepository implements AddressRepository {
   constructor(private prisma: PrismaService) {}
-  async create(data: CreateAddressDto): Promise<Address> {
+  async create(data: CreateAddressDto, user_id: string): Promise<Address> {
     const address = new Address();
     Object.assign(address, {
       ...data,
     });
+
     const newAddress = await this.prisma.addresses.create({
-      data: { ...address },
+      data: {
+        cep: address.cep,
+        state: address.state,
+        city: address.city,
+        street: address.street,
+        number: address.number,
+        complement: address.complement,
+        user_id: user_id,
+      },
     });
     return plainToInstance(Address, newAddress);
   }

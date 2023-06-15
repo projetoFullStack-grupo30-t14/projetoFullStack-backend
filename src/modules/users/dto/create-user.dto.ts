@@ -1,12 +1,15 @@
 import { hashSync } from 'bcryptjs';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsString,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
+import { CreateAddressDto } from 'src/modules/addresses/dto/create-address.dto';
+import { Address } from 'src/modules/addresses/entities/address.entity';
 
 export class CreateUserDto {
   @IsString()
@@ -33,9 +36,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   description: string;
 
-  @IsString()
   @IsNotEmpty()
-  address: string;
+  @ValidateNested()
+  @Type(() => CreateAddressDto)
+  address: Address;
 
   @IsBoolean()
   @IsNotEmpty()
