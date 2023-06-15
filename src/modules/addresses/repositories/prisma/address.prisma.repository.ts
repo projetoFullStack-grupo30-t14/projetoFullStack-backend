@@ -36,7 +36,9 @@ export class AddressPrismaRepository implements AddressRepository {
 
   async findOne(id: string): Promise<Address> {
     const address = await this.prisma.addresses.findUnique({
-      where: { id },
+      where: {
+        user_id: id,
+      },
     });
     return plainToInstance(Address, address);
   }

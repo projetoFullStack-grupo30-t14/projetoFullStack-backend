@@ -21,6 +21,7 @@ export class AddressesService {
 
   async update(user_id: string, updateAddressDto: UpdateAddressDto) {
     const address = await this.addressRepository.findOne(user_id);
+
     if (!address) {
       throw new NotFoundException('Endereço de usuário não encontrado');
     }
