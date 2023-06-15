@@ -74,4 +74,8 @@ export class CarsService {
   findValues() {
     return this.carRepository.distinctValues();
   }
+
+  findByOwner(user_id: string) {
+    return this.carRepository.findByOwner(user_id);
+  }
 }

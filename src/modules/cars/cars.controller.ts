@@ -16,7 +16,6 @@ import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from './dto/update-car.dto';
 import { CurrentUser } from '../users/user.decorator';
-import { User } from '../users/entities/user.entity';
 import { JWTAuthGuard } from '../auth/jwt.auth.guard';
 
 export interface IRequestUser {
@@ -75,6 +74,13 @@ export class CarsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.carsService.findOne(id);
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JWTAuthGuard)
+  @Get('/access/owner')
+  findByOwner(@CurrentUser() user: IRequestUser) {
+    return this.carsService.findByOwner(user.id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

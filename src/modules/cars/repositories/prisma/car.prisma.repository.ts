@@ -130,8 +130,6 @@ export class CarPrismaRepository implements CarRepository {
       skip: (+page - 1) * +perPage,
     });
 
-    // console.log(carList.length);
-
     return plainToInstance(Car, carList);
   }
 
@@ -224,5 +222,15 @@ export class CarPrismaRepository implements CarRepository {
     values.model = model.map((model) => model.model);
 
     return values;
+  }
+
+  async findByOwner(user_id: string): Promise<Car[]> {
+    const carList = await this.prisma.cars.findMany({
+      where: {
+        usersId: user_id,
+      },
+    });
+
+    return plainToInstance(Car, carList);
   }
 }

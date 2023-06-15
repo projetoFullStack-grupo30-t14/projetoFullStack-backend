@@ -38,4 +38,5 @@ export abstract class CarRepository {
     brand: string[];
     model: string[];
   }>;
+  abstract findByOwner(user_id: string): Promise<Car[]> | Car[];
 }
