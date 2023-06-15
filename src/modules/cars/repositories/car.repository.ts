@@ -20,6 +20,7 @@ export abstract class CarRepository {
     priceBy: 'asc' | 'desc',
     page: number | undefined,
     perPage: number | undefined,
+    user_id: string | undefined,
   ): Promise<Car[]> | Car[];
   abstract findOne(id: string): Promise<Car> | Car;
   abstract update(

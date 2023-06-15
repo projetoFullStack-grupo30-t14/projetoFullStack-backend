@@ -81,6 +81,7 @@ export class CarPrismaRepository implements CarRepository {
     priceBy: 'asc' | 'desc',
     page: number | undefined = 1,
     perPage: number | undefined = 12,
+    user_id: string | undefined,
   ): Promise<Car[]> {
     if (perPage === 0) {
       perPage = 1;
@@ -113,6 +114,7 @@ export class CarPrismaRepository implements CarRepository {
           lte: priceMax ? +priceMax : priceMax,
           gte: priceMin ? +priceMin : priceMin,
         },
+        usersId: user_id,
       },
       include: {
         car_gallery: {

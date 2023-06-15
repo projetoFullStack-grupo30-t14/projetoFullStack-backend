@@ -25,6 +25,7 @@ export class CarsService {
     priceBy: 'asc' | 'desc',
     page: number | undefined,
     perPage: number | undefined,
+    user_id: string | undefined,
   ) {
     return this.carRepository.findAll(
       brand,
@@ -40,6 +41,7 @@ export class CarsService {
       priceBy,
       page,
       perPage,
+      user_id,
     );
   }
 
