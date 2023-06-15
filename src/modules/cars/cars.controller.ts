@@ -16,7 +16,6 @@ import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from './dto/update-car.dto';
 import { CurrentUser } from '../users/user.decorator';
-import { User } from '../users/entities/user.entity';
 import { JWTAuthGuard } from '../auth/jwt.auth.guard';
 
 export interface IRequestUser {
@@ -53,6 +52,7 @@ export class CarsController {
     @Query('priceBy') priceBy: 'asc' | 'desc',
     @Query('page') page: number | undefined,
     @Query('perPage') perPage: number | undefined,
+    @Query('user_id') user_id: string | undefined,
   ) {
     return this.carsService.findAll(
       brand,
@@ -68,6 +68,7 @@ export class CarsController {
       priceBy,
       page,
       perPage,
+      user_id,
     );
   }
 
@@ -75,6 +76,13 @@ export class CarsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.carsService.findOne(id);
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JWTAuthGuard)
+  @Get('/access/owner')
+  findByOwner(@CurrentUser() user: IRequestUser) {
+    return this.carsService.findByOwner(user.id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

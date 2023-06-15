@@ -81,6 +81,7 @@ export class CarPrismaRepository implements CarRepository {
     priceBy: 'asc' | 'desc',
     page: number | undefined = 1,
     perPage: number | undefined = 12,
+    user_id: string | undefined,
   ): Promise<Car[]> {
     if (perPage === 0) {
       perPage = 1;
@@ -113,6 +114,7 @@ export class CarPrismaRepository implements CarRepository {
           lte: priceMax ? +priceMax : priceMax,
           gte: priceMin ? +priceMin : priceMin,
         },
+        usersId: user_id,
       },
       include: {
         car_gallery: {
@@ -129,8 +131,6 @@ export class CarPrismaRepository implements CarRepository {
       take: +perPage,
       skip: (+page - 1) * +perPage,
     });
-
-    // console.log(carList.length);
 
     return plainToInstance(Car, carList);
   }
@@ -224,5 +224,15 @@ export class CarPrismaRepository implements CarRepository {
     values.model = model.map((model) => model.model);
 
     return values;
+  }
+
+  async findByOwner(user_id: string): Promise<Car[]> {
+    const carList = await this.prisma.cars.findMany({
+      where: {
+        usersId: user_id,
+      },
+    });
+
+    return plainToInstance(Car, carList);
   }
 }
