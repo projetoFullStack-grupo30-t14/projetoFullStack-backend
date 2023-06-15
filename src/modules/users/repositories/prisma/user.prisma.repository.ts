@@ -5,6 +5,7 @@ import { CreateUserDto } from '../../dto/create-user.dto';
 import { User } from '../../entities/user.entity';
 import { plainToInstance } from 'class-transformer';
 import { UpdateUserDto } from '../../dto/update-user.dto';
+import { Address } from 'src/modules/addresses/entities/address.entity';
 
 @Injectable()
 export class UserPrismaRepository implements UserRepository {
@@ -14,18 +15,42 @@ export class UserPrismaRepository implements UserRepository {
     if (foundUser) {
       throw new BadRequestException('Email já cadastrado');
     }
+
     const user = new User();
     Object.assign(user, {
       ...data,
     });
+
+    const newAddress = new Address();
+    Object.assign(newAddress, data.address);
+
     const newUser = await this.prisma.users.create({
-      data: { ...user },
+      data: {
+        ...data,
+        address: {
+          create: newAddress,
+        },
+      },
+      include: {
+        address: {
+          select: {
+            id: true,
+            cep: true,
+            state: true,
+            city: true,
+            street: true,
+            number: true,
+            complement: true,
+          },
+        },
+      },
     });
+
     return plainToInstance(User, newUser);
   }
 
   async findAll(): Promise<User[]> {
-    const users: User[] = await this.prisma.users.findMany();
+    const users = await this.prisma.users.findMany();
     return plainToInstance(User, users);
   }
 

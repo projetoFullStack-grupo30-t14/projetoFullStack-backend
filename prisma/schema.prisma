@@ -28,8 +28,8 @@ model Cars {
   is_active   Boolean      @default(true)
   created_at  DateTime     @default(now())
   car_gallery CarGallery[]
-  user        Users       @relation(fields: [usersId], references: [id])
-  usersId     String      @db.Uuid
+  user        Users        @relation(fields: [usersId], references: [id])
+  usersId     String       @db.Uuid
 }
 
 model CarGallery {
@@ -42,16 +42,16 @@ model CarGallery {
 }
 
 model Users {
-  id            String   @id @default(uuid()) @db.Uuid
+  id            String     @id @default(uuid()) @db.Uuid
   name          String
-  email         String   @unique
+  email         String     @unique
   cpf           String
   phone         String
   date_of_birth String
   description   String
-  address       String
+  address       Addresses?
   seller        Boolean
-  created_at    DateTime @default(now())
+  created_at    DateTime   @default(now())
   password      String
   cars          Cars[]
 
@@ -59,13 +59,15 @@ model Users {
 }
 
 model Addresses {
-  id            String   @id @default(uuid()) @db.Uuid
-  cep           Int
-  state         String 
-  city          String 
-  street        String 
-  number        Int
-  complement    String 
+  id         String @id @default(uuid()) @db.Uuid
+  cep        String
+  state      String
+  city       String
+  street     String
+  number     String
+  complement String
+  user       Users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id     String @unique @db.Uuid
 
   @@map("addresses")
 }

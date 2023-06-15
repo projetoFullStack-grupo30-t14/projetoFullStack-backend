@@ -1,9 +1,9 @@
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateAddressDto {
-  @IsInt()
+  @IsString()
   @IsNotEmpty()
-  cep: number;
+  cep: string;
 
   @IsString()
   @IsNotEmpty()
@@ -17,9 +17,9 @@ export class CreateAddressDto {
   @IsNotEmpty()
   street: string;
 
-  @IsInt()
+  @IsString()
   @IsNotEmpty()
-  number: number;
+  number: string;
 
   @IsString()
   complement: string;
