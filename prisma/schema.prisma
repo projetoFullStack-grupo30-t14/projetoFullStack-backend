@@ -24,7 +24,7 @@ model Cars {
   price_FIPE  Float?
   price       Float
   description String       @db.Text
-  cover_image String       @db.VarChar(120)
+  cover_image String       
   is_active   Boolean      @default(true)
   created_at  DateTime     @default(now())
   car_gallery CarGallery[]
