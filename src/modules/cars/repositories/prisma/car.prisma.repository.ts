@@ -124,6 +124,13 @@ export class CarPrismaRepository implements CarRepository {
             id: true,
           },
         },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
       },
       orderBy: {
         mileage: mileageBy,
