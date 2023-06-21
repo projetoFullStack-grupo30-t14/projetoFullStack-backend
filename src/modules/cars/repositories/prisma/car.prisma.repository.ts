@@ -139,43 +139,30 @@ export class CarPrismaRepository implements CarRepository {
     ]);
 
     let url = `http://localhost:3001/cars?`;
+    // eslint-disable-next-line prefer-rest-params
+    const args = [...arguments];
+    const possible = [
+      'brand',
+      'model',
+      'color',
+      'year',
+      'fuel',
+      'mileageMin',
+      'mileageMax',
+      'priceMin',
+      'priceMax',
+      'mileageBy',
+      'priceBy',
+      'page',
+      'perPage',
+      'user_id',
+    ];
 
-    if (brand) {
-      url = url.concat(`brand=${brand}&`);
-    }
-    if (model) {
-      url = url.concat(`model=${model}&`);
-    }
-    if (color) {
-      url = url.concat(`color=${color}&`);
-    }
-    if (year) {
-      url = url.concat(`year=${year}&`);
-    }
-    if (fuel) {
-      url = url.concat(`fuel=${fuel}&`);
-    }
-    if (mileageMin) {
-      url = url.concat(`mileageMin=${mileageMin}&`);
-    }
-    if (mileageMax) {
-      url = url.concat(`mileageMax=${mileageMax}&`);
-    }
-    if (priceMin) {
-      url = url.concat(`priceMin=${priceMin}&`);
-    }
-    if (priceMax) {
-      url = url.concat(`priceMax=${priceMax}&`);
-    }
-    if (mileageBy) {
-      url = url.concat(`mileageBy=${mileageBy}&`);
-    }
-    if (priceBy) {
-      url = url.concat(`priceBy=${priceBy}&`);
-    }
-    if (user_id) {
-      url = url.concat(`user_id=${user_id}&`);
-    }
+    args.forEach((arg, index) => {
+      if (arg && possible[index] !== 'page' && possible[index] !== 'perPage') {
+        url = url.concat(`${possible[index]}=${arg}&`);
+      }
+    });
 
     const returnObj = {
       count: count,
