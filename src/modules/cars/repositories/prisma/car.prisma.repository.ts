@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { CarRepository, FindAllReturn } from '../car.repository';
 import { PrismaService } from 'src/database/prisma.service';
@@ -99,7 +100,7 @@ export class CarPrismaRepository implements CarRepository {
       page = 1;
     }
 
-    const carList: Cars[] = await this.prisma.cars.findMany({
+    const query: Prisma.CarsFindManyArgs = {
       where: {
         brand: { contains: brand, mode: 'insensitive' },
         model: { contains: model, mode: 'insensitive' },
@@ -130,15 +131,12 @@ export class CarPrismaRepository implements CarRepository {
       },
       take: +perPage,
       skip: (+page - 1) * +perPage,
-    });
+    };
 
-    const count = (
-      await this.prisma.cars.aggregate({
-        _count: {
-          model: true,
-        },
-      })
-    )._count.model;
+    const [carList, count]: [Cars[], number] = await this.prisma.$transaction([
+      this.prisma.cars.findMany(query),
+      this.prisma.cars.count({ where: query.where }),
+    ]);
 
     const returnObj = {
       count: count,
