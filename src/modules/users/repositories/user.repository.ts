@@ -10,5 +10,6 @@ export abstract class UserRepository {
     email: string,
   ): Promise<User | undefined | null> | User | undefined | null;
   abstract update(id: string, data: UpdateUserDto): Promise<User>;
+  abstract updateToken(email: string, resetToken: string): Promise<void>;
   abstract delete(id: string): Promise<void>;
 }

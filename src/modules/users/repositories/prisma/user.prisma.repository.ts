@@ -15,7 +15,7 @@ export class UserPrismaRepository implements UserRepository {
     if (foundUser) {
       throw new BadRequestException('Email já cadastrado');
     }
-
+    
     const user = new User();
     Object.assign(user, {
       ...data,
@@ -79,6 +79,13 @@ export class UserPrismaRepository implements UserRepository {
   async delete(id: string): Promise<void> {
     await this.prisma.users.delete({
       where: { id },
+    });
+  }
+
+  async updateToken(email: string, resetToken: string): Promise<void> {
+    await this.prisma.users.update({
+      where: { email },
+      data: { reset_token: resetToken },
     });
   }
 }

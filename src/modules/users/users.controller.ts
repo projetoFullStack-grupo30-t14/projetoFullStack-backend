@@ -47,4 +47,11 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
+  @HttpCode(200)
+  @Post('resetPassword')
+  async sendEmailPassword(@Body('email') email: string) {
+    await this.usersService.sendEmailPassword(email);
+    return { message: 'Email enviado.' };
+  }
 }

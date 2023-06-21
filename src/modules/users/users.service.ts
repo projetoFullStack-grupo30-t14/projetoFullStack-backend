@@ -1,11 +1,16 @@
+import { randomUUID } from 'node:crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './repositories/user.repository';
+import { MailService } from 'src/utils/mail.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UserRepository) {}
+  constructor(
+    private usersRepository: UserRepository,
+    private mailService: MailService,
+  ) {}
   create(createUserDto: CreateUserDto) {
     return this.usersRepository.create(createUserDto);
   }
@@ -43,5 +48,22 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('Usuário não encontrado');
     }
+  }
+
+  async sendEmailPassword(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const resetToken = randomUUID();
+    await this.usersRepository.updateToken(email, resetToken);
+
+    const resetPasswordTemplate = this.mailService.resetPasswordTemplate(
+      email,
+      user.name,
+      resetToken,
+    );
+    await this.mailService.sendEmail(resetPasswordTemplate);
   }
 }

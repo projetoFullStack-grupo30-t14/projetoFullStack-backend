@@ -53,6 +53,7 @@ model Users {
   seller        Boolean
   created_at    DateTime   @default(now())
   password      String
+  reset_token   String?
   cars          Cars[]
 
   @@map("users")
