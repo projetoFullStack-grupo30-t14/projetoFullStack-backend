@@ -132,6 +132,31 @@ export class CarPrismaRepository implements CarRepository {
       skip: (+page - 1) * +perPage,
     });
 
+    const count = await this.prisma.cars.aggregate({
+      _count: {
+        model: true,
+      },
+    });
+
+    const returnObj = {
+      count: count._count.model,
+      previousPage:
+        perPage * (page - 1) === 0
+          ? null
+          : `http://localhost:3001/cars?page=${
+              Number(page) - 1
+            }&perPage=${perPage}`,
+      nextPage:
+        count._count.model <= Number(perPage * page)
+          ? null
+          : `http://localhost:3001/cars?page=${
+              Number(page) + 1
+            }&perPage=${perPage}`,
+      // data: plainToInstance(Car, carList),
+    };
+
+    console.log(returnObj);
+
     return plainToInstance(Car, carList);
   }
 
