@@ -138,20 +138,55 @@ export class CarPrismaRepository implements CarRepository {
       this.prisma.cars.count({ where: query.where }),
     ]);
 
+    let url = `http://localhost:3001/cars?`;
+
+    if (brand) {
+      url = url.concat(`brand=${brand}&`);
+    }
+    if (model) {
+      url = url.concat(`model=${model}&`);
+    }
+    if (color) {
+      url = url.concat(`color=${color}&`);
+    }
+    if (year) {
+      url = url.concat(`year=${year}&`);
+    }
+    if (fuel) {
+      url = url.concat(`fuel=${fuel}&`);
+    }
+    if (mileageMin) {
+      url = url.concat(`mileageMin=${mileageMin}&`);
+    }
+    if (mileageMax) {
+      url = url.concat(`mileageMax=${mileageMax}&`);
+    }
+    if (priceMin) {
+      url = url.concat(`priceMin=${priceMin}&`);
+    }
+    if (priceMax) {
+      url = url.concat(`priceMax=${priceMax}&`);
+    }
+    if (mileageBy) {
+      url = url.concat(`mileageBy=${mileageBy}&`);
+    }
+    if (priceBy) {
+      url = url.concat(`priceBy=${priceBy}&`);
+    }
+    if (user_id) {
+      url = url.concat(`user_id=${user_id}&`);
+    }
+
     const returnObj = {
       count: count,
       previousPage:
         perPage * (page - 1) === 0
           ? null
-          : `http://localhost:3001/cars?page=${
-              Number(page) - 1
-            }&perPage=${perPage}`,
+          : `${url}page=${Number(page) - 1}&perPage=${perPage}`,
       nextPage:
         count <= Number(perPage * page)
           ? null
-          : `http://localhost:3001/cars?page=${
-              Number(page) + 1
-            }&perPage=${perPage}`,
+          : `${url}page=${Number(page) + 1}&perPage=${perPage}`,
       data: plainToInstance(Car, carList),
     };
 
