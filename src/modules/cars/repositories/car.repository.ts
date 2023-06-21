@@ -4,6 +4,13 @@ import { UpdateCarDto, UpdateGalleryDto } from '../dto/update-car.dto';
 import { Car, Car_image } from '../entities/car.entity';
 import { IRequestUser } from '../cars.controller';
 
+export interface FindAllReturn {
+  count: number;
+  previousPage: string | null;
+  nextPage: string | null;
+  data: Car[];
+}
+
 export abstract class CarRepository {
   abstract create(data: CreateCarDto, user: User): Promise<Car> | Car;
   abstract findAll(
@@ -21,7 +28,7 @@ export abstract class CarRepository {
     page: number | undefined,
     perPage: number | undefined,
     user_id: string | undefined,
-  ): Promise<Car[]> | Car[];
+  ): Promise<FindAllReturn> | FindAllReturn;
   abstract findOne(id: string): Promise<Car> | Car;
   abstract update(
     id: string,

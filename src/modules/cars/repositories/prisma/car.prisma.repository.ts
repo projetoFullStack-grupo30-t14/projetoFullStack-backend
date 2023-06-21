@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CarRepository } from '../car.repository';
+import { CarRepository, FindAllReturn } from '../car.repository';
 import { PrismaService } from 'src/database/prisma.service';
 import { plainToInstance } from 'class-transformer';
 import { Cars } from '@prisma/client';
@@ -82,7 +82,7 @@ export class CarPrismaRepository implements CarRepository {
     page: number | undefined = 1,
     perPage: number | undefined = 12,
     user_id: string | undefined,
-  ): Promise<Car[]> {
+  ): Promise<FindAllReturn> {
     if (perPage === 0) {
       perPage = 1;
     }
@@ -132,14 +132,16 @@ export class CarPrismaRepository implements CarRepository {
       skip: (+page - 1) * +perPage,
     });
 
-    const count = await this.prisma.cars.aggregate({
-      _count: {
-        model: true,
-      },
-    });
+    const count = (
+      await this.prisma.cars.aggregate({
+        _count: {
+          model: true,
+        },
+      })
+    )._count.model;
 
     const returnObj = {
-      count: count._count.model,
+      count: count,
       previousPage:
         perPage * (page - 1) === 0
           ? null
@@ -147,17 +149,15 @@ export class CarPrismaRepository implements CarRepository {
               Number(page) - 1
             }&perPage=${perPage}`,
       nextPage:
-        count._count.model <= Number(perPage * page)
+        count <= Number(perPage * page)
           ? null
           : `http://localhost:3001/cars?page=${
               Number(page) + 1
             }&perPage=${perPage}`,
-      // data: plainToInstance(Car, carList),
+      data: plainToInstance(Car, carList),
     };
 
-    console.log(returnObj);
-
-    return plainToInstance(Car, carList);
+    return returnObj;
   }
 
   async findOne(id: string): Promise<Car> {
