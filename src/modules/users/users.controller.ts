@@ -54,4 +54,13 @@ export class UsersController {
     await this.usersService.sendEmailPassword(email);
     return { message: 'Email enviado.' };
   }
+
+  @Patch('resetPassword/:token')
+  async resetPassword(
+    @Param('token') token: string,
+    @Body('password') password: string,
+  ) {
+    await this.usersService.resetPassword(token, password);
+    return { message: 'Senha alterada com sucesso.' };
+  }
 }

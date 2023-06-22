@@ -66,4 +66,13 @@ export class UsersService {
     );
     await this.mailService.sendEmail(resetPasswordTemplate);
   }
+
+  async resetPassword(reset_token: string, password: string) {
+    const user = await this.usersRepository.findByToken(reset_token);
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    await this.usersRepository.updatePassword(user.id, password);
+  }
 }
