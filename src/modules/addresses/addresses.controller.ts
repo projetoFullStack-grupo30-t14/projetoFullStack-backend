@@ -1,5 +1,13 @@
-/* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { AddressesService } from './addresses.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
@@ -27,9 +35,12 @@ export class AddressesController {
     return this.addressesService.findOne(id);
   }
 
-  @Patch('')
+  @Patch()
   @UseGuards(JWTAuthGuard)
-  update( @Body() updateAddressDto: UpdateAddressDto, @CurrentUser() user: IRequestUser)  {
+  update(
+    @Body() updateAddressDto: UpdateAddressDto,
+    @CurrentUser() user: IRequestUser,
+  ) {
     return this.addressesService.update(user.id, updateAddressDto);
   }
 

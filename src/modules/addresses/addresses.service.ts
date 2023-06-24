@@ -12,18 +12,22 @@ export class AddressesService {
   }
 
   findAll() {
-    return `This action returns all addresses`;
+    return this.addressRepository.findAll();
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} address`;
+    const address = this.addressRepository.findOne(id);
+    if (!address) {
+      throw new NotFoundException('Endereço não encontrado');
+    }
+    return address;
   }
 
   async update(user_id: string, updateAddressDto: UpdateAddressDto) {
     const address = await this.addressRepository.findOne(user_id);
 
     if (!address) {
-      throw new NotFoundException('Endereço de usuário não encontrado');
+      throw new NotFoundException('Endereço não encontrado');
     }
     const newAddress = this.addressRepository.update(
       address.id,
@@ -33,6 +37,9 @@ export class AddressesService {
   }
 
   remove(id: string) {
-    return `This action removes a #${id} address`;
+    const address = this.addressRepository.delete(id);
+    if (!address) {
+      throw new NotFoundException('Endereço não encontrado');
+    }
   }
 }
