@@ -17,16 +17,21 @@ import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from './dto/update-car.dto';
 import { CurrentUser } from '../users/user.decorator';
 import { JWTAuthGuard } from '../auth/jwt.auth.guard';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 export interface IRequestUser {
   id: string;
   email: string;
 }
 
+@ApiTags('cars')
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
+
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   @Post()
   @UseGuards(JWTAuthGuard)
   create(
@@ -78,6 +83,7 @@ export class CarsController {
     return this.carsService.findOne(id);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JWTAuthGuard)
   @Get('/access/owner')
@@ -91,6 +97,7 @@ export class CarsController {
     return this.carsService.findValues();
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
   @UseGuards(JWTAuthGuard)
@@ -102,6 +109,7 @@ export class CarsController {
     return this.carsService.update(id, updateCarDto, user);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch('/gallery/:id')
   @UseGuards(JWTAuthGuard)
@@ -112,6 +120,7 @@ export class CarsController {
     return this.carsService.updateGallery(id, updateGalleryDto);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(204)
   @Delete(':id')

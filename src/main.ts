@@ -19,7 +19,8 @@ async function bootstrap() {
     .setTitle('MotorShop API')
     .setDescription('The API developed to allow users to buy and sell cars')
     .setVersion('1.0')
-    .addTag('cars')
+    .addTag('login')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, nestConfig);
