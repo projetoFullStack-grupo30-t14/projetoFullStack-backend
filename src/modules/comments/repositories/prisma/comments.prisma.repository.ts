@@ -4,6 +4,7 @@ import { CommentRepository } from '../comments.repository';
 import { CreateCommentDto } from '../../dto/create-comment.dto';
 import { Comment } from '../../entities/comment.entity';
 import { plainToInstance } from 'class-transformer';
+import { UpdateCommentDto } from '../../dto/update-comment.dto';
 
 @Injectable()
 export class CommentPrismaRepository implements CommentRepository {
@@ -20,25 +21,42 @@ export class CommentPrismaRepository implements CommentRepository {
 
     const newComment = await this.prisma.comments.create({
       data: {
-        content: comment.content,
+        ...comment,
         user_id: user_id,
         car_id: car_id,
       },
     });
 
-    return plainToInstance(Comment, newComment); //se algum campo precisar ser ocultado (senha)
+    return plainToInstance(Comment, newComment);
   }
-  async findAll(): Promise<Comment[]> {
-    const comments: Comment[] = await this.prisma.comments.findMany()
+
+  async findAllByCar(car_id: string): Promise<Comment[]> {
+    const comments: Comment[] = await this.prisma.comments.findMany({
+      where: { car_id },
+    });
     return plainToInstance(Comment, comments);
   }
-  findOne(id: string): Comment | Promise<Comment> {
-    throw new Error('Method not implemented.');
+
+  async findOne(id: string): Promise<Comment> {
+    const comment: Comment | null = await this.prisma.comments.findUnique({
+      where: { id },
+      include: {
+        car: true,
+        user: true,
+      },
+    });
+    return plainToInstance(Comment, comment);
   }
-  update(id: string): Comment | Promise<Comment> {
-    throw new Error('Method not implemented.');
+
+  async update(id: string, data: UpdateCommentDto): Promise<Comment> {
+    const comment = await this.prisma.comments.update({
+      where: { id },
+      data: { ...data },
+    });
+    return plainToInstance(Comment, comment);
   }
-  delete(id: string): void | Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.comments.delete({ where: { id } });
   }
 }

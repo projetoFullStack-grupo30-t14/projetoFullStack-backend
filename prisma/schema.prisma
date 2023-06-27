@@ -36,7 +36,7 @@ model Cars {
 model CarGallery {
   id     String @id @default(uuid())
   image  String @db.VarChar(160)
-  car_id String 
+  car_id String
   car    Cars   @relation(fields: [car_id], references: [id], onDelete: Cascade)
 
   @@map("car_images")
@@ -76,12 +76,13 @@ model Addresses {
 }
 
 model Comments {
-  id      String @id @default(uuid()) @db.Uuid
-  content String
-  car     Cars   @relation(fields: [car_id], references: [id], onDelete: Cascade)
-  car_id  String 
-  user    Users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id String @db.Uuid
+  id         String   @id @default(uuid()) @db.Uuid
+  content    String
+  car        Cars     @relation(fields: [car_id], references: [id], onDelete: Cascade)
+  car_id     String
+  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String   @db.Uuid
+  created_at DateTime @default(now())
 
   @@map("comments")
 }

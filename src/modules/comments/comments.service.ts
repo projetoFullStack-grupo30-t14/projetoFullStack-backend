@@ -1,15 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { IRequestUser } from './../cars/cars.controller';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CommentPrismaRepository } from './repositories/prisma/comments.prisma.repository';
 
 @Injectable()
 export class CommentsService {
-  create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+  constructor(private commentRepository: CommentPrismaRepository) {}
+  create(
+    car_id: string,
+    user: IRequestUser,
+    createCommentDto: CreateCommentDto,
+  ) {
+    return this.commentRepository.create(createCommentDto, user.id, car_id);
   }
 
-  findAll() {
-    return `This action returns all comments`;
+  findAllByCar(car_id: string) {
+    const comments = this.commentRepository.findAllByCar(car_id);
+    if (!comments) {
+      throw new NotFoundException('Comentários não encontrados.');
+    }
   }
 
   findOne(id: number) {
