@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CommentRepository } from '../comments.repository';
 import { CreateCommentDto } from '../../dto/create-comment.dto';
@@ -14,11 +18,6 @@ export class CommentPrismaRepository implements CommentRepository {
     user_id: string,
     car_id: string,
   ): Promise<Comment> {
-    const comment = new Comment();
-    Object.assign(comment, {
-      ...data,
-    });
-
     const exists = await this.prisma.comments.findFirst({
       where: { user_id, car_id },
     });
@@ -26,6 +25,11 @@ export class CommentPrismaRepository implements CommentRepository {
     if (exists) {
       throw new ConflictException('Usuário já possui comentário nesse carro');
     }
+
+    const comment = new Comment();
+    Object.assign(comment, {
+      ...data,
+    });
 
     const newComment = await this.prisma.comments.create({
       data: {
@@ -51,7 +55,13 @@ export class CommentPrismaRepository implements CommentRepository {
   }
 
   async findAllByCar(car_id: string): Promise<Comment[]> {
-    const comments: Comment[] = await this.prisma.comments.findMany({
+    const car = await this.prisma.cars.findUnique({ where: { id: car_id } });
+
+    if (!car) {
+      throw new NotFoundException('Carro não encontrado.');
+    }
+
+    const comments = await this.prisma.comments.findMany({
       where: { car_id },
       include: {
         car: {
@@ -66,11 +76,17 @@ export class CommentPrismaRepository implements CommentRepository {
         },
       },
     });
+
+    if (!comments) {
+      throw new NotFoundException(
+        'Ainda não existem comentários nesse anúncio.',
+      );
+    }
     return plainToInstance(Comment, comments);
   }
 
   async findOne(id: string): Promise<Comment> {
-    const comment: Comment | null = await this.prisma.comments.findUnique({
+    const comment = await this.prisma.comments.findUnique({
       where: { id },
       include: {
         car: {
@@ -85,6 +101,10 @@ export class CommentPrismaRepository implements CommentRepository {
         },
       },
     });
+
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado.');
+    }
     return plainToInstance(Comment, comment);
   }
 
@@ -105,10 +125,16 @@ export class CommentPrismaRepository implements CommentRepository {
         },
       },
     });
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado.');
+    }
     return plainToInstance(Comment, comment);
   }
 
   async delete(id: string): Promise<void> {
-    await this.prisma.comments.delete({ where: { id } });
+    const comment = await this.prisma.comments.delete({ where: { id } });
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado.');
+    }
   }
 }

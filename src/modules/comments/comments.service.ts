@@ -17,32 +17,23 @@ export class CommentsService {
 
   findAllByCar(car_id: string) {
     const comments = this.commentRepository.findAllByCar(car_id);
-    if (!comments) {
-      throw new NotFoundException('Comentários não encontrados.');
-    }
+
     return comments;
   }
 
   findOne(id: string) {
     const comment = this.commentRepository.findOne(id);
-    if (!comment) {
-      throw new NotFoundException('Comentário não encontrado.');
-    }
+
     return comment;
   }
 
   update(id: string, updateCommentDto: UpdateCommentDto) {
     const comment = this.commentRepository.update(id, updateCommentDto);
-    if (!comment) {
-      throw new NotFoundException('Comentário não encontrado.');
-    }
+
     return comment;
   }
 
   remove(id: string) {
-    const comment = this.commentRepository.delete(id);
-    if (!comment) {
-      throw new NotFoundException('Comentário não encontrado.');
-    }
+    return this.commentRepository.delete(id);
   }
 }

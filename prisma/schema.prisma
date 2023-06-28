@@ -83,6 +83,6 @@ model Comments {
   user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String   @db.Uuid
   created_at DateTime @default(now())
-
+  updatedAt  DateTime @updatedAt
   @@map("comments")
 }
