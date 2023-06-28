@@ -20,17 +20,29 @@ export class CommentsService {
     if (!comments) {
       throw new NotFoundException('Comentários não encontrados.');
     }
+    return comments
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} comment`;
+    const comment = this.commentRepository.findOne(id);
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado.');
+    }
+    return comment
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+   update(id: number, updateCommentDto: UpdateCommentDto) {
+    const comment = this.commentRepository.update(id, updateCommentDto)
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado.')
+    }
+    return comment
   }
 
   remove(id: number) {
-    return `This action removes a #${id} comment`;
+    const comment = this.commentRepository.delete(id)
+    if (!comment) {
+      throw new NotFoundException('Comentário não encontrado.')
+    }
   }
 }
