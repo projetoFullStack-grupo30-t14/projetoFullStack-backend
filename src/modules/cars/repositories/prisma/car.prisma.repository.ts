@@ -221,6 +221,16 @@ export class CarPrismaRepository implements CarRepository {
       where: { id },
       data: {
         ...rest,
+        car_gallery: {
+          deleteMany: {},
+          connectOrCreate: car_gallery?.map((image) => {
+            const config = {
+              where: { id },
+              create: { image: image },
+            };
+            return config;
+          }),
+        },
       },
       include: {
         car_gallery: {
