@@ -24,12 +24,13 @@ model Cars {
   price_FIPE  Float?
   price       Float
   description String       @db.Text
-  cover_image String       
+  cover_image String
   is_active   Boolean      @default(true)
   created_at  DateTime     @default(now())
   car_gallery CarGallery[]
   user        Users        @relation(fields: [usersId], references: [id], onDelete: Cascade)
   usersId     String       @db.Uuid
+  comments    Comments[]
 }
 
 model CarGallery {
@@ -55,6 +56,7 @@ model Users {
   password      String
   reset_token   String?
   cars          Cars[]
+  comments      Comments[]
 
   @@map("users")
 }
@@ -68,7 +70,19 @@ model Addresses {
   number     String
   complement String
   user       Users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id     String @unique @db.Uuid
+  user_id    String @unique @db.Uuid
 
   @@map("addresses")
+}
+
+model Comments {
+  id         String   @id @default(uuid()) @db.Uuid
+  content    String
+  car        Cars     @relation(fields: [car_id], references: [id], onDelete: Cascade)
+  car_id     String
+  user       Users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String   @db.Uuid
+  created_at DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@map("comments")
 }
