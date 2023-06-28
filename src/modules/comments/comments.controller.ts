@@ -33,7 +33,7 @@ export class CommentsController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get(':car_id')
+  @Get('car/:car_id')
   findAllByCar(@Param('car_id') car_id: string) {
     return this.commentsService.findAllByCar(car_id);
   }
@@ -42,20 +42,20 @@ export class CommentsController {
   @UseGuards(JWTAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(+id);
+    return this.commentsService.findOne(id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
   @UseGuards(JWTAuthGuard)
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentsService.update(+id, updateCommentDto);
+    return this.commentsService.update(id, updateCommentDto);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
   @UseGuards(JWTAuthGuard)
   remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+    return this.commentsService.remove(id);
   }
 }

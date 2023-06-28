@@ -10,6 +10,7 @@ import { CommentPrismaRepository } from './repositories/prisma/comments.prisma.r
   providers: [
     CommentsService,
     PrismaService,
+    CommentPrismaRepository,
     {
       provide: CommentRepository,
       useClass: CommentPrismaRepository,
