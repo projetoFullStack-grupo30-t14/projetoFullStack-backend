@@ -15,6 +15,9 @@ async function bootstrap() {
     }),
   );
 
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+
   const nestConfig = new DocumentBuilder()
     .setTitle('MotorShop API')
     .setDescription('The API developed to allow users to buy and sell cars')
@@ -25,9 +28,6 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, nestConfig);
   SwaggerModule.setup('docs', app, document);
-
-  const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   await app.listen(3001);
 }
