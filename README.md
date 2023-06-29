@@ -8,14 +8,15 @@ An API built on <a href="https://docs.nestjs.com/" target= "_blank noreferrer no
 <br>
 The errors are translated to Portuguese.
 <br>
+
 ## Docs
 
-You can find a <a href="https://docs.nestjs.com/openapi/introduction" target= "_blank noreferrer noopener">Swagger</a> version of the docs at `/docs` or:
+You can find a, <a href="https://insomnia.rest/download" target= "_blank noreferrer noopener">Insomnia</a> version of the docs at `localhost:3001/`, a <a href="https://docs.nestjs.com/openapi/introduction" target= "_blank noreferrer noopener">Swagger</a> version at `localhost:3001/docs` or directly:
 <br>
 
 <div align="center">
 
-[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=MotorShop&uri=https%3A%2F%2Fgithub.com%2FCToH10%2Fcontacts%2Fblob%2Fdocs%2Fsrc%2Futils%2Fdocs%2FInsomnia_2023-06-29.json)
+[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=MotorShop&uri=https%3A%2F%2Fgithub.com%2FCToH10%2Fcontacts%2Fblob%2Fdocs%2Fsrc%2Futils%2Fdocs%2Finsomnia.json)
 
 </div>
 <br>
