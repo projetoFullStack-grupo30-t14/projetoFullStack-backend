@@ -1,6 +1,14 @@
 import { Transform } from 'class-transformer';
-import { IsIn, IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
-
+import {
+  IsBoolean,
+  IsIn,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 const current = new Date().getFullYear();
 
 export class CreateCarDto {
@@ -49,6 +57,10 @@ export class CreateCarDto {
 
   @IsString({ each: true })
   car_gallery: string[];
+
+  @IsBoolean()
+  @IsOptional()
+  is_active: boolean;
 }
 
 export class GalleryDto {
