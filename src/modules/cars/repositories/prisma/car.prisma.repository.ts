@@ -226,7 +226,7 @@ export class CarPrismaRepository implements CarRepository {
       data: {
         ...rest,
         car_gallery: {
-          deleteMany: {},
+          deleteMany: car_gallery ? {} : undefined,
           connectOrCreate: car_gallery?.map((image) => {
             const config = {
               where: { id },
