@@ -5,7 +5,9 @@
 ## Description
 
 An API built on <a href="https://docs.nestjs.com/" target= "_blank noreferrer noopener">NestJS</a > using <a href="https://www.prisma.io/" target= "_blank noreferrer noopener">Prisma</a> targeting a <a href="https://www.postgresql.org/" target= "_blank noreferrer noopener">PostgreSQL</a> database to allow users to buy and sell cars.
-
+<br>
+The errors are translated to Portuguese.
+<br>
 ## Docs
 
 You can find a <a href="https://docs.nestjs.com/openapi/introduction" target= "_blank noreferrer noopener">Swagger</a> version of the docs at `/docs` or:
