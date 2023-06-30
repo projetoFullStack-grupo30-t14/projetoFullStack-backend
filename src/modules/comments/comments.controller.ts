@@ -16,11 +16,14 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CurrentUser } from '../users/user.decorator';
 import { IRequestUser } from '../cars/cars.controller';
 import { JWTAuthGuard } from '../auth/jwt.auth.guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Post(':car_id')
   @UseGuards(JWTAuthGuard)
@@ -38,6 +41,7 @@ export class CommentsController {
     return this.commentsService.findAllByCar(car_id);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JWTAuthGuard)
   @Get(':id')
@@ -45,6 +49,7 @@ export class CommentsController {
     return this.commentsService.findOne(id);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
   @UseGuards(JWTAuthGuard)
@@ -52,6 +57,7 @@ export class CommentsController {
     return this.commentsService.update(id, updateCommentDto);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Delete(':id')
   @UseGuards(JWTAuthGuard)

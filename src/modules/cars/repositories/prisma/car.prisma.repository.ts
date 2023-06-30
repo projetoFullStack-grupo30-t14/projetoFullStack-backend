@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CarRepository, FindAllReturn } from '../car.repository';
 import { PrismaService } from 'src/database/prisma.service';
 import { plainToInstance } from 'class-transformer';
@@ -78,8 +78,8 @@ export class CarPrismaRepository implements CarRepository {
     mileageMax: number | undefined,
     priceMin: number | undefined,
     priceMax: number | undefined,
-    mileageBy: 'asc' | 'desc',
-    priceBy: 'asc' | 'desc',
+    mileageBy: 'asc' | 'desc' | undefined,
+    priceBy: 'asc' | 'desc' | undefined,
     page: number | undefined = 1,
     perPage: number | undefined = 12,
     user_id: string | undefined,
@@ -207,6 +207,10 @@ export class CarPrismaRepository implements CarRepository {
       },
     });
 
+    if (!findCar) {
+      throw new NotFoundException('Carro não encontrado');
+    }
+
     return plainToInstance(Car, findCar);
   }
 
@@ -242,6 +246,10 @@ export class CarPrismaRepository implements CarRepository {
       },
     });
 
+    if (!updatedCar) {
+      throw new NotFoundException('Carro não encontrado');
+    }
+
     return plainToInstance(Car, updatedCar);
   }
 
@@ -255,6 +263,14 @@ export class CarPrismaRepository implements CarRepository {
   }
 
   async delete(id: string): Promise<void> {
+    const findCar: Cars | null = await this.prisma.cars.findUnique({
+      where: { id },
+    });
+
+    if (!findCar) {
+      throw new NotFoundException('Carro não encontrado');
+    }
+
     await this.prisma.cars.delete({ where: { id } });
   }
 
