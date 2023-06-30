@@ -23,7 +23,7 @@ You can find a, <a href="https://insomnia.rest/download" target= "_blank norefer
 
 ## Working example
 
-The service is running [here](https://motor-shop-grupo30.onrender.com/) and can be accessed through [here](VERCEL_LINK).
+The service is running [here](https://motor-shop-grupo30.onrender.com/) and can be accessed through [here](https://projeto-full-stack-frontend.vercel.app/).
 
 ## Run locally
 
