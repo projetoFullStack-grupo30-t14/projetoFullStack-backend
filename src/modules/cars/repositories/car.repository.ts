@@ -46,5 +46,9 @@ export abstract class CarRepository {
     brand: string[];
     model: string[];
   }>;
-  abstract findByOwner(user_id: string): Promise<Car[]> | Car[];
+  abstract findByOwner(
+    user_id: string,
+    page: number | undefined,
+    perPage: number | undefined,
+  ): Promise<FindAllReturn> | FindAllReturn;
 }

@@ -77,7 +77,11 @@ export class CarsService {
     return this.carRepository.distinctValues();
   }
 
-  findByOwner(user_id: string) {
-    return this.carRepository.findByOwner(user_id);
+  findByOwner(
+    user_id: string,
+    page: number | undefined,
+    perPage: number | undefined,
+  ) {
+    return this.carRepository.findByOwner(user_id, page, perPage);
   }
 }
