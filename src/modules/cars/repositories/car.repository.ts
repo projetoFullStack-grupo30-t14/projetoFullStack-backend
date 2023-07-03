@@ -23,8 +23,8 @@ export abstract class CarRepository {
     mileageMax: number | undefined,
     priceMin: number | undefined,
     priceMax: number | undefined,
-    mileageBy: 'asc' | 'desc',
-    priceBy: 'asc' | 'desc',
+    mileageBy: 'asc' | 'desc' | undefined,
+    priceBy: 'asc' | 'desc' | undefined,
     page: number | undefined,
     perPage: number | undefined,
     user_id: string | undefined,
@@ -46,5 +46,9 @@ export abstract class CarRepository {
     brand: string[];
     model: string[];
   }>;
-  abstract findByOwner(user_id: string): Promise<Car[]> | Car[];
+  abstract findByOwner(
+    user_id: string,
+    page: number | undefined,
+    perPage: number | undefined,
+  ): Promise<FindAllReturn> | FindAllReturn;
 }

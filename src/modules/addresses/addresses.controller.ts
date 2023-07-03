@@ -14,11 +14,14 @@ import { UpdateAddressDto } from './dto/update-address.dto';
 import { JWTAuthGuard } from '../auth/jwt.auth.guard';
 import { CurrentUser } from '../users/user.decorator';
 import { IRequestUser } from '../cars/cars.controller';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('addresses')
 @Controller('addresses')
 export class AddressesController {
   constructor(private readonly addressesService: AddressesService) {}
 
+  @ApiBearerAuth()
   @Post()
   @UseGuards(JWTAuthGuard)
   create(@Body() createAddressDto: CreateAddressDto) {
@@ -35,6 +38,7 @@ export class AddressesController {
     return this.addressesService.findOne(id);
   }
 
+  @ApiBearerAuth()
   @Patch()
   @UseGuards(JWTAuthGuard)
   update(
@@ -44,6 +48,7 @@ export class AddressesController {
     return this.addressesService.update(user.id, updateAddressDto);
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(JWTAuthGuard)
   remove(@Param('id') id: string) {

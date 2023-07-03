@@ -21,8 +21,8 @@ export class CarsService {
     mileageMax: number | undefined,
     priceMin: number | undefined,
     priceMax: number | undefined,
-    mileageBy: 'asc' | 'desc',
-    priceBy: 'asc' | 'desc',
+    mileageBy: 'asc' | 'desc' | undefined,
+    priceBy: 'asc' | 'desc' | undefined,
     page: number | undefined,
     perPage: number | undefined,
     user_id: string | undefined,
@@ -77,7 +77,11 @@ export class CarsService {
     return this.carRepository.distinctValues();
   }
 
-  findByOwner(user_id: string) {
-    return this.carRepository.findByOwner(user_id);
+  findByOwner(
+    user_id: string,
+    page: number | undefined,
+    perPage: number | undefined,
+  ) {
+    return this.carRepository.findByOwner(user_id, page, perPage);
   }
 }

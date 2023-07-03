@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CarRepository, FindAllReturn } from '../car.repository';
 import { PrismaService } from 'src/database/prisma.service';
 import { plainToInstance } from 'class-transformer';
@@ -8,6 +8,7 @@ import { CreateCarDto } from '../../dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from '../../dto/update-car.dto';
 import { Car, Car_image } from '../../entities/car.entity';
 import { IRequestUser } from '../../cars.controller';
+import 'dotenv';
 
 @Injectable()
 export class CarPrismaRepository implements CarRepository {
@@ -78,8 +79,8 @@ export class CarPrismaRepository implements CarRepository {
     mileageMax: number | undefined,
     priceMin: number | undefined,
     priceMax: number | undefined,
-    mileageBy: 'asc' | 'desc',
-    priceBy: 'asc' | 'desc',
+    mileageBy: 'asc' | 'desc' | undefined,
+    priceBy: 'asc' | 'desc' | undefined,
     page: number | undefined = 1,
     perPage: number | undefined = 12,
     user_id: string | undefined,
@@ -145,7 +146,7 @@ export class CarPrismaRepository implements CarRepository {
       this.prisma.cars.count({ where: query.where }),
     ]);
 
-    let url = `http://localhost:3001/cars?`;
+    let url = `${process.env.SERVICE_URL}cars?`;
     // eslint-disable-next-line prefer-rest-params
     const args = [...arguments];
     const possible = [
@@ -207,6 +208,10 @@ export class CarPrismaRepository implements CarRepository {
       },
     });
 
+    if (!findCar) {
+      throw new NotFoundException('Carro não encontrado');
+    }
+
     return plainToInstance(Car, findCar);
   }
 
@@ -242,6 +247,10 @@ export class CarPrismaRepository implements CarRepository {
       },
     });
 
+    if (!updatedCar) {
+      throw new NotFoundException('Carro não encontrado');
+    }
+
     return plainToInstance(Car, updatedCar);
   }
 
@@ -255,6 +264,14 @@ export class CarPrismaRepository implements CarRepository {
   }
 
   async delete(id: string): Promise<void> {
+    const findCar: Cars | null = await this.prisma.cars.findUnique({
+      where: { id },
+    });
+
+    if (!findCar) {
+      throw new NotFoundException('Carro não encontrado');
+    }
+
     await this.prisma.cars.delete({ where: { id } });
   }
 
@@ -295,13 +312,55 @@ export class CarPrismaRepository implements CarRepository {
     return values;
   }
 
-  async findByOwner(user_id: string): Promise<Car[]> {
-    const carList = await this.prisma.cars.findMany({
+  async findByOwner(
+    user_id: string,
+    page: number | undefined = 1,
+    perPage: number | undefined = 16,
+  ): Promise<FindAllReturn> {
+    if (perPage === 0) {
+      perPage = 1;
+    }
+
+    if (isNaN(Number(perPage))) {
+      perPage = 12;
+    }
+
+    if (isNaN(Number(page))) {
+      page = 1;
+    }
+
+    if (page <= 0) {
+      page = 1;
+    }
+
+    const query: Prisma.CarsFindManyArgs = {
       where: {
         usersId: user_id,
       },
-    });
+      take: +perPage,
+      skip: (+page - 1) * +perPage,
+    };
 
-    return plainToInstance(Car, carList);
+    const [carList, count]: [Cars[], number] = await this.prisma.$transaction([
+      this.prisma.cars.findMany(query),
+      this.prisma.cars.count({ where: query.where }),
+    ]);
+
+    const url = `${process.env.SERVICE_URL}cars?`;
+
+    const returnObj = {
+      count: count,
+      previousPage:
+        perPage * (page - 1) === 0
+          ? null
+          : `${url}page=${Number(page) - 1}&perPage=${perPage}`,
+      nextPage:
+        count <= Number(perPage * page)
+          ? null
+          : `${url}page=${Number(page) + 1}&perPage=${perPage}`,
+      data: plainToInstance(Car, carList),
+    };
+
+    return returnObj;
   }
 }

@@ -17,16 +17,32 @@ import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto, UpdateGalleryDto } from './dto/update-car.dto';
 import { CurrentUser } from '../users/user.decorator';
 import { JWTAuthGuard } from '../auth/jwt.auth.guard';
+import { ApiTags, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 
 export interface IRequestUser {
   id: string;
   email: string;
 }
 
+enum fuelEnum {
+  eletric = 'electric',
+  flex = 'flex',
+  hybrid = 'hybrid',
+}
+
+enum sortBy {
+  asc = 'asc',
+  desc = 'desc',
+}
+
+@ApiTags('cars')
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
+
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   @Post()
   @UseGuards(JWTAuthGuard)
   create(
@@ -37,6 +53,24 @@ export class CarsController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiQuery({ name: 'brand', type: String, required: false })
+  @ApiQuery({ name: 'model', type: String, required: false })
+  @ApiQuery({ name: 'color', type: String, required: false })
+  @ApiQuery({ name: 'year', type: Number, required: false })
+  @ApiQuery({
+    name: 'fuel',
+    required: false,
+    enum: fuelEnum,
+  })
+  @ApiQuery({ name: 'mileageMin', type: Number, required: false })
+  @ApiQuery({ name: 'mileageMax', type: Number, required: false })
+  @ApiQuery({ name: 'priceMin', type: Number, required: false })
+  @ApiQuery({ name: 'priceMax', type: Number, required: false })
+  @ApiQuery({ name: 'mileageBy', enum: sortBy, required: false })
+  @ApiQuery({ name: 'priceBy', enum: sortBy, required: false })
+  @ApiQuery({ name: 'page', type: Number, required: false })
+  @ApiQuery({ name: 'perPage', type: Number, required: false })
+  @ApiQuery({ name: 'user_id', type: String, required: false })
   @Get()
   findAll(
     @Query('brand') brand: string | undefined,
@@ -48,8 +82,8 @@ export class CarsController {
     @Query('mileageMax') mileageMax: number | undefined,
     @Query('priceMin') priceMin: number | undefined,
     @Query('priceMax') priceMax: number | undefined,
-    @Query('mileageBy') mileageBy: 'asc' | 'desc',
-    @Query('priceBy') priceBy: 'asc' | 'desc',
+    @Query('mileageBy') mileageBy: 'asc' | 'desc' | undefined,
+    @Query('priceBy') priceBy: 'asc' | 'desc' | undefined,
     @Query('page') page: number | undefined,
     @Query('perPage') perPage: number | undefined,
     @Query('user_id') user_id: string | undefined,
@@ -78,11 +112,16 @@ export class CarsController {
     return this.carsService.findOne(id);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JWTAuthGuard)
   @Get('/access/owner')
-  findByOwner(@CurrentUser() user: IRequestUser) {
-    return this.carsService.findByOwner(user.id);
+  findByOwner(
+    @CurrentUser() user: IRequestUser,
+    @Query('page') page: number | undefined,
+    @Query('perPage') perPage: number | undefined,
+  ) {
+    return this.carsService.findByOwner(user.id, page, perPage);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -91,6 +130,7 @@ export class CarsController {
     return this.carsService.findValues();
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch(':id')
   @UseGuards(JWTAuthGuard)
@@ -102,6 +142,7 @@ export class CarsController {
     return this.carsService.update(id, updateCarDto, user);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @Patch('/gallery/:id')
   @UseGuards(JWTAuthGuard)
@@ -112,6 +153,7 @@ export class CarsController {
     return this.carsService.updateGallery(id, updateGalleryDto);
   }
 
+  @ApiBearerAuth()
   @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(204)
   @Delete(':id')
