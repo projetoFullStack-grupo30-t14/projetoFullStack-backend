@@ -116,8 +116,12 @@ export class CarsController {
   @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JWTAuthGuard)
   @Get('/access/owner')
-  findByOwner(@CurrentUser() user: IRequestUser) {
-    return this.carsService.findByOwner(user.id);
+  findByOwner(
+    @CurrentUser() user: IRequestUser,
+    @Query('page') page: number | undefined,
+    @Query('perPage') perPage: number | undefined,
+  ) {
+    return this.carsService.findByOwner(user.id, page, perPage);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
