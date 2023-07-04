@@ -322,7 +322,7 @@ export class CarPrismaRepository implements CarRepository {
     }
 
     if (isNaN(Number(perPage))) {
-      perPage = 12;
+      perPage = 16;
     }
 
     if (isNaN(Number(page))) {
