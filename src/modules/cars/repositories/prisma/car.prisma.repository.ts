@@ -203,6 +203,7 @@ export class CarPrismaRepository implements CarRepository {
             id: true,
             name: true,
             description: true,
+            phone: true,
           },
         },
       },
